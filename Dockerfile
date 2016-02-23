@@ -1,9 +1,9 @@
-FROM alpine:3.2
+FROM alpine:3.3
 
-ENV PACKER_VERSION 0.8.6
-ENV PACKER_SHA256SUM 2f1ca794e51de831ace30792ab0886aca516bf6b407f6027e816ba7ca79703b5
+ENV PACKER_VERSION 0.9.0
+ENV PACKER_SHA256SUM 4119d711855e8b85edb37f2299311f08c215fca884d3e941433f85081387e17c
 
-RUN apk add --update wget ca-certificates unzip build-base ruby-dev && \
+RUN apk add --update wget ca-certificates unzip build-base ruby-dev ruby && \
     wget -q "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk" && \
     apk add --allow-untrusted glibc-2.21-r2.apk && \
     gem install bundler --no-ri --no-rdoc && \
