@@ -1,6 +1,6 @@
 machine:
   environment:
-    PKR_VERSION: 0.8.6
+    PKR_VERSION: 0.9.0
   services:
     - docker
 
