@@ -16,6 +16,16 @@ dependencies:
 test:
   override:
     - docker run unifio/packer version
+    - |
+      docker run -v ~/.aws:/root/.aws \
+                 -v `pwd`:/data \
+                 -w /data/uat \
+                 --rm unifio/packer validate -var version=${CIRCLE_BUILD_NUM} uat.json
+    - |
+      docker run -v ~/.aws:/root/.aws \
+                 -v `pwd`:/data \
+                 -w /data/uat \
+                 --rm unifio/packer build -var version=${CIRCLE_BUILD_NUM} uat.json
 
 deployment:
   hub:

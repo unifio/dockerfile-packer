@@ -1,0 +1,32 @@
+{
+  "variables": {
+    "version": ""
+  },
+  "builders": [{
+    "type": "amazon-ebs",
+    "source_ami": "ami-63b25203",
+    "region": "us-west-2",
+    "instance_type": "m3.medium",
+    "communicator": "ssh",
+    "ssh_username": "ec2-user",
+    "ami_name": "s3-post-processor-uat-{{isotime \"20060102-150405\"}}",
+    "ami_description": "Automated acceptance test for Vagrant S3 post processor",
+    "ami_virtualization_type": "hvm"
+  }],
+  "post-processors": [[
+    {
+      "type": "vagrant",
+      "output": "s3-post-processor-uat-{{isotime \"20060102-150405\"}}.box"
+    },
+    {
+      "type": "vagrant-s3",
+      "region": "us-east-1",
+      "bucket": "unifio-basebox",
+      "manifest": "manifests/s3-post-processor-uat",
+      "box_name": "unifio/s3-post-processor-uat",
+      "box_dir": "boxes",
+      "acl": "authenticated-read",
+      "version": "{{user `version`}}"
+    }
+  ]]
+}
