@@ -1,7 +1,7 @@
 FROM alpine:3.3
 
-ENV PACKER_VERSION 0.10.0
-ENV PACKER_SHA256SUM eadd33bc0f8fa42034059fc1cda5f43ed6f540746e767480f0706ebed49b45e5
+ENV PACKER_VERSION 0.10.1
+ENV PACKER_SHA256SUM 7d51fc5db19d02bbf32278a8116830fae33a3f9bd4440a58d23ad7c863e92e28
 
 RUN apk add --update wget ca-certificates unzip build-base ruby-dev ruby && \
     wget -q "https://circle-artifacts.com/gh/andyshinn/alpine-pkg-glibc/6/artifacts/0/home/ubuntu/alpine-pkg-glibc/packages/x86_64/glibc-2.21-r2.apk" && \
