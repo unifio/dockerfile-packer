@@ -13,6 +13,13 @@
     "ami_description": "Automated acceptance test for Packer container",
     "ami_virtualization_type": "hvm"
   }],
+  "provisioners": [{
+    "type": "serverspec",
+    "user": "root",
+    "rake_file": "Rakefile",
+    "rake_task": "serverspec:all",
+    "rake_env_vars": "$BUNDLE_GEMFILE=Gemfile"
+  }],
   "post-processors": [[
     {
       "type": "vagrant",
