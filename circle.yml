@@ -15,14 +15,27 @@ dependencies:
 
 test:
   override:
-    - docker run unifio/packer version
+    - docker run --rm unifio/packer version
+    - docker create -v /ruby_gems --name gems busybox
     - |
-      docker run -v ~/.aws:/root/.aws \
+      docker run --volumes-from gems \
+                 --entrypoint /bin/sh \
+                 -e "GEM_HOME=/ruby_gems" \
+                 -v `pwd`:/data \
+                 -w /data/uat \
+                 --rm unifio/packer -c "bundle install"
+    - |
+      docker run --volumes-from gems \
+                 -e "GEM_HOME=/ruby_gems" \
+                 -v ~/.aws:/root/.aws \
                  -v `pwd`:/data \
                  -w /data/uat \
                  --rm unifio/packer validate -var version=${CIRCLE_BUILD_NUM} uat.json
     - |
-      docker run -v ~/.aws:/root/.aws \
+      docker run --volumes-from gems \
+                 -e "GEM_HOME=/ruby_gems" \
+                 -e "PATH=$PATH:/ruby_gems/bin" \
+                 -v ~/.aws:/root/.aws \
                  -v `pwd`:/data \
                  -w /data/uat \
                  --rm unifio/packer build -var version=${CIRCLE_BUILD_NUM} uat.json
