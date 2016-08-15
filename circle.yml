@@ -37,6 +37,7 @@ test:
                  -e "PATH=$PATH:/ruby_gems/bin" \
                  -v ~/.aws:/root/.aws \
                  -v `pwd`:/data \
+                 -v /var/run/docker.sock:/var/run/docker.sock \
                  -w /data/uat \
                  --rm unifio/packer build -var version=${CIRCLE_BUILD_NUM} uat.json
 
