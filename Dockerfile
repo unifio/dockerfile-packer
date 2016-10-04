@@ -1,7 +1,7 @@
 FROM alpine:3.4
 MAINTAINER "Unif.io, Inc. <support@unif.io>"
 
-ENV PACKER_VERSION 0.10.1
+ENV PACKER_VERSION 0.10.2
 
 RUN apk add --no-cache --update ca-certificates gnupg openssl git wget unzip && \
     gpg --recv-keys 91A6E7F85D05C65630BEF18951852D87348FFC4C && \
