@@ -35,8 +35,7 @@ RUN mkdir -p /tmp/build && \
     cd /tmp/build && \
     wget -q -O docker.tgz "https://get.docker.com/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" && \
     echo "${DOCKER_SHA256} *docker.tgz" | sha256sum -c - && \
-    tar -xzvf docker.tgz && \
-    cp docker/* /bin && \
+    tar -C / -xzvf docker.tgz && \
     cd /tmp && \
     rm -rf /tmp/build && \
     docker -v

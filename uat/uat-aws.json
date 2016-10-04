@@ -12,15 +12,9 @@
     "ami_name": "packer-container-uat-{{isotime \"20060102-150405\"}}",
     "ami_description": "Automated acceptance test for Packer container",
     "ami_virtualization_type": "hvm"
-  },
-  {
-    "type": "docker",
-    "image": "debian",
-    "export_path": "image.tar"
   }],
   "provisioners": [{
     "type": "serverspec",
-    "only": ["amazon-ebs"],
     "user": "root",
     "rake_file": "Rakefile",
     "rake_task": "serverspec:all",
@@ -29,12 +23,10 @@
   "post-processors": [[
     {
       "type": "vagrant",
-      "only": ["amazon-ebs"],
-      "output": "packer-container-uat-{{isotime \"20060102-150405\"}}.box"
+      "output": "packer-container-uat.box"
     },
     {
       "type": "vagrant-s3",
-      "only": ["amazon-ebs"],
       "region": "us-east-1",
       "bucket": "unifio-basebox",
       "manifest": "manifests/packer-container-uat",

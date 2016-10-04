@@ -27,19 +27,30 @@ test:
     - |
       docker run --volumes-from gems \
                  -e "GEM_HOME=/ruby_gems" \
-                 -v ~/.aws:/root/.aws \
+                 -e LOCAL_USER_ID=$UID \
+                 -e DEBUG=true \
+                 -v ~/.aws:/home/user/.aws \
                  -v `pwd`:/data \
                  -w /data/uat \
-                 --rm unifio/packer validate -var version=${CIRCLE_BUILD_NUM} uat.json
+                 --rm unifio/packer validate -var version=${CIRCLE_BUILD_NUM} uat-aws.json
     - |
       docker run --volumes-from gems \
                  -e "GEM_HOME=/ruby_gems" \
                  -e "PATH=$PATH:/ruby_gems/bin" \
-                 -v ~/.aws:/root/.aws \
+                 -e LOCAL_USER_ID=$UID \
+                 -e DEBUG=true \
+                 -v ~/.aws:/home/user/.aws \
                  -v `pwd`:/data \
                  -v /var/run/docker.sock:/var/run/docker.sock \
                  -w /data/uat \
-                 --rm unifio/packer build -var version=${CIRCLE_BUILD_NUM} uat.json
+                 --rm unifio/packer build -var version=${CIRCLE_BUILD_NUM} uat-aws.json
+    - test -O uat/packer-container-uat.box
+    - |
+      docker run -v `pwd`:/data \
+                 -v /var/run/docker.sock:/var/run/docker.sock \
+                 -w /data/uat \
+                 --rm unifio/packer build uat-docker.json
+    - "! test -O uat/image.tar"
 
 deployment:
   hub:
