@@ -15,41 +15,29 @@ dependencies:
 
 test:
   override:
-    - docker run --rm unifio/packer version
-    - docker create -v /ruby_gems --name gems busybox
+    - docker run unifio/packer version
     - |
-      docker run --volumes-from gems \
-                 --entrypoint /bin/sh \
-                 -e "GEM_HOME=/ruby_gems" \
-                 -v `pwd`:/data \
-                 -w /data/uat \
-                 --rm unifio/packer -c "bundle install"
-    - |
-      docker run --volumes-from gems \
-                 -e "GEM_HOME=/ruby_gems" \
-                 -e LOCAL_USER_ID=$UID \
+      docker run -e LOCAL_USER_ID=$UID \
                  -e DEBUG=true \
                  -v ~/.aws:/home/user/.aws \
                  -v `pwd`:/data \
                  -w /data/uat \
-                 --rm unifio/packer validate -var version=${CIRCLE_BUILD_NUM} uat-aws.json
+                 unifio/packer validate -var version=${CIRCLE_BUILD_NUM} uat-aws.json
     - |
-      docker run --volumes-from gems \
-                 -e "GEM_HOME=/ruby_gems" \
-                 -e "PATH=$PATH:/ruby_gems/bin" \
+      docker run -e "PATH=$PATH:/ruby_gems/bin" \
                  -e LOCAL_USER_ID=$UID \
                  -e DEBUG=true \
                  -v ~/.aws:/home/user/.aws \
                  -v `pwd`:/data \
                  -v /var/run/docker.sock:/var/run/docker.sock \
                  -w /data/uat \
-                 --rm unifio/packer build -var version=${CIRCLE_BUILD_NUM} uat-aws.json
+                 unifio/packer build -var version=${CIRCLE_BUILD_NUM} uat-aws.json
     - test -O uat/packer-container-uat.box
     - |
       docker run -v `pwd`:/data \
                  -v /var/run/docker.sock:/var/run/docker.sock \
                  -w /data/uat \
-                 --rm unifio/packer build uat-docker.json
+                 unifio/packer build uat-docker.json
     - "! test -O uat/image.tar"
 
 deployment:
