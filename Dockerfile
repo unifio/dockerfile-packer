@@ -50,7 +50,7 @@ RUN apk add --no-cache --update build-base ruby-dev ruby && \
     apk add glibc-2.23-r3.apk && \
     chmod +x packer-post-processor-vagrant-s3 packer-provisioner-serverspec && \
     mv packer-post-processor-vagrant-s3 packer-provisioner-serverspec /bin && \
-    gem install io-console bundler --no-ri --no-rdoc && \
+    gem install io-console bundler rake rspec serverspec --no-ri --no-rdoc && \
     cd /tmp && \
     rm -rf /tmp/build
 
