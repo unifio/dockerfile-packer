@@ -9,7 +9,7 @@ fi
 if [ "$USER_ID" -ne "0" ]; then
   adduser -s /bin/sh -D -u $USER_ID user
   export HOME=/home/user
-  exec /bin/gosu user /bin/packer "$@"
+  exec /bin/gosu user /usr/local/bin/packer "$@"
 else
-  exec /bin/packer "$@"
+  exec /usr/local/bin/packer "$@"
 fi
