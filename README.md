@@ -9,7 +9,7 @@ Packer is a tool for creating machine and container images for multiple platform
 
 ## Dockerfile
 
-This Docker image is based on the official [alpine:3.4](https://hub.docker.com/_/alpine/) base image.
+This Docker image is based on the official [alpine:3.5](https://hub.docker.com/_/alpine/) base image.
 
 ## Enhancements
 

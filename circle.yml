@@ -1,6 +1,7 @@
 machine:
   environment:
-    PKR_VERSION: 0.12.0
+    PKR_VERSION: 0.12.2
+    DOCKER_IMAGE: 'unifio/packer'
   services:
     - docker
 
@@ -10,34 +11,37 @@ dependencies:
   override:
     - docker info
     - if [[ -e ~/docker/image.tar ]]; then docker load --input ~/docker/image.tar; fi
-    - docker build -t unifio/packer .
-    - mkdir -p ~/docker; docker save unifio/packer > ~/docker/image.tar
+    - docker build --rm=false -t ${DOCKER_IMAGE} .
+    - mkdir -p ~/docker; docker save ${DOCKER_IMAGE} > ~/docker/image.tar
 
 test:
   override:
-    - docker run unifio/packer version
+    - docker run -e CHECKPOINT_DISABLE=1 ${DOCKER_IMAGE} version
     - |
       docker run -e LOCAL_USER_ID=$UID \
+                 -e CHECKPOINT_DISABLE=1 \
                  -e DEBUG=true \
                  -v ~/.aws:/home/user/.aws \
                  -v `pwd`:/data \
                  -w /data/uat \
-                 unifio/packer validate -var version=${CIRCLE_BUILD_NUM} uat-aws.json
+                 ${DOCKER_IMAGE} validate -var version=${CIRCLE_BUILD_NUM} uat-aws.json
     - |
       docker run -e "PATH=$PATH:/ruby_gems/bin" \
                  -e LOCAL_USER_ID=$UID \
+                 -e CHECKPOINT_DISABLE=1 \
                  -e DEBUG=true \
                  -v ~/.aws:/home/user/.aws \
                  -v `pwd`:/data \
                  -v /var/run/docker.sock:/var/run/docker.sock \
                  -w /data/uat \
-                 unifio/packer build -var version=${CIRCLE_BUILD_NUM} uat-aws.json
+                 ${DOCKER_IMAGE} build -var version=${CIRCLE_BUILD_NUM} uat-aws.json
     - test -O uat/packer-container-uat.box
     - |
       docker run -v `pwd`:/data \
                  -v /var/run/docker.sock:/var/run/docker.sock \
                  -w /data/uat \
-                 unifio/packer build uat-docker.json
+                 -e CHECKPOINT_DISABLE=1 \
+                 ${DOCKER_IMAGE} build uat-docker.json
     - "! test -O uat/image.tar"
 
 deployment:
@@ -45,5 +49,5 @@ deployment:
     branch: master
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker tag -f `docker images | grep -E 'unifio/packer' | awk '{print $3}'` unifio/packer:${PKR_VERSION}
-      - docker push unifio/packer
+      - docker tag -f `docker images | grep -E "${DOCKER_IMAGE}" | awk '{print $3}'` ${DOCKER_IMAGE}:${PKR_VERSION}
+      - docker push ${DOCKER_IMAGE}
