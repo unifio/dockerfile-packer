@@ -1,6 +1,6 @@
 machine:
   environment:
-    PKR_VERSION: 0.12.2
+    PKR_VERSION: 0.12.1
     DOCKER_IMAGE: 'unifio/packer'
   services:
     - docker
