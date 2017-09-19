@@ -1,7 +1,7 @@
 FROM alpine:3.5
 MAINTAINER "Unif.io, Inc. <support@unif.io>"
 
-ENV PACKER_VERSION 1.0.0
+ENV PACKER_VERSION 1.0.1
 
 # This is the release of https://github.com/hashicorp/docker-base to pull in order
 # to provide HashiCorp-built versions of basic utilities like dumb-init and gosu.
